@@ -1,5 +1,8 @@
 package com.assigment.bookstore.person;
 
+import com.assigment.bookstore.securityJwt.models.User;
+import com.assigment.bookstore.securityJwt.security.services.UserDetailsServiceImpl;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +13,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 
 import static com.assigment.bookstore.util.asJsonString;
+import static org.assertj.core.api.InstanceOfAssertFactories.COLLECTION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,23 +33,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PersonControllerTest {
 
 
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
     @Autowired
     private MockMvc mockMvc;
+
+
+
+    @Before()
+    public void setup()
+    {
+        //Init MockMvc Object and build
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+
     private URL url = new URL("http", "localhost", 8080, "/api/v1");
     @Autowired
-
     private PersonService personService;
     PersonControllerTest() throws MalformedURLException {
     }
 
     @Test
+    @WithMockUser(value = "admin", roles = {"ADMIN", "MOD", "USER"})
     void all() throws Exception {
         mockMvc.perform(get(url + "/persons"))
                 .andDo(print()).andExpect(status().isOk());
     }
 
 
-    @WithMockUser("admin")
+    @WithMockUser(value = "admin", roles = {"ADMIN", "MOD", "USER"})
     @Test
     void removeOneAsAdminIsOk() throws Exception {
         //GIVEN
@@ -55,7 +77,8 @@ class PersonControllerTest {
                 .andExpect(status().is(HttpStatus.OK.value()));
         personService.removeOne(person.getEmail());
     }
-    @WithMockUser("user")
+
+    @WithMockUser()
     @Test
     void removeOneAsUserIsForbidden() throws Exception {
         //GIVEN
@@ -69,8 +92,8 @@ class PersonControllerTest {
         personService.removeOne(person.getEmail());
     }
 
-    @WithMockUser("admin")
     @Test
+    @WithMockUser(value = "admin", roles = {"ADMIN", "MOD", "USER"})
     void addOneAsAdminIsOk() throws Exception {
         //GIVEN
         Person person = new Person("testuser@gmial.com");
@@ -83,11 +106,11 @@ class PersonControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 //THEN
-                .andExpect(status().is(HttpStatus.OK.value()));
+                .andExpect(status().is(HttpStatus.CREATED.value()));
         personService.removeOne(person.getEmail());
     }
 
-    @WithMockUser("user")
+    @WithMockUser()
     @Test
     void addOneAsUserIsUnauthorized() throws Exception {
         //GIVEN
@@ -106,4 +129,10 @@ class PersonControllerTest {
     }
 
 
+//    @Test
+//    void getMyInfo() throws Exception {
+//        mockMvc.perform(get(url.toString() + "/persons/me"))
+//                .andDo(print())
+//                .andExpect(status().is(HttpStatus.OK.value()));
+//    }
 }

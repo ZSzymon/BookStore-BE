@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.assigment.bookstore.person.Person;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -23,6 +24,8 @@ public class User {
   @Size(max = 20)
   private String username;
 
+  @DBRef
+  private Person person;
   private LocalDateTime created = LocalDateTime.now();
 
   @NotBlank
@@ -49,6 +52,7 @@ public class User {
     this.email = email;
     this.password = password;
     this.roles = roles;
+
   }
 
 

@@ -39,7 +39,7 @@ Use a [API-DOCS](http://localhost:8080/swagger-ui/index.html)
     docker-compose up -d 
     ````
 
-2. Run SureTime application
+2. Run BookStore application
     ```
     mvn spring-boot:run
     ```
@@ -53,55 +53,39 @@ Use a [API-DOCS](http://localhost:8080/swagger-ui/index.html)
     curl --location --request POST 'http://localhost:8080/api/auth/signup' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "username": "admintest",
-    "email": "admintest@gmail.com",
+    "username": "user",
+    "email": "user@gmail.com",
     "password": "password"
 }'
   ```
 5. Login to API:
-      ```
+  ```
     curl --location --request POST 'http://localhost:8080/api/auth/signin' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "username":"admintest",
     "password":"password"
     }'
-      ```
+  ```
 6. If authorization is turn on you can make GET request. If you want to make any other request you have to provide authorization token in request header.
-```
-curl --location --request GET 'http://localhost:8080/api/test/admin' \
---header 'Authorization: Bearer token'
-```
-### Project requirements for 4
+  ```
+    curl --location --request GET 'http://localhost:8080/api/test/admin' \
+    --header 'Authorization: Bearer token'
+  ```
+### Project requirements
 
-- [x] Wykorzystanie narzędzia Spring Framework (najlepiej z wykorzystaniem SpringBoot) + Maven + git (repozytorium w
-  ogólnie dostępnym darmowym hostingu)
+3. CRUD + Spring Security z podziałem na role : admin -dodaje i usuwa  ksiazki z ksiegarni, user możne przeglądać.
 
-- [x] Kod ma być dostępny w zewnętrznym repozytorium razem z dokumentacją
+3.5  CRUD + koszyk - dodawanie usuwanie książek przez Usera.
 
-- [ ] min 10 poprawnych (zgodnych z REST) endpoint-ów (min. 4 metody GET / POST / PUT / DELETE) Należy znać sens
-  wykorzystywanych metod.
+4. Zamówienia -  Dodanie funkcji które może wykonywać User - składanie zamówień na książki, zmiana statusu zamówienia przez admina.
 
-- [ ] Do wszystkich endpointów należy przygotować kolekcję requestów za pomocą programu Postman (wyeksportowana kolekcja
-  ma znaleźć się w repozytorium razem z kodem oraz dokumentacją w oddzielnych katalogach)
+4.5 Wygląd aplikacji Można użyć boostrapa / Własny bardziej rozbudowany projekt lub bardziej rozszerzony projekt z przykładu
 
-- [ ] min 5 tabel w bazie wykorzystywanej przez aplikację
+5 Płatności - np. wysyłanie szczczegółów zamówienia na maila z danymi do przelewu lub podpięcie np. PayU
 
-- [x] Logika biznesowa wykorzystująca DI oraz IoC
++ 0.5  za zadania - jeżeli  zostanie zrealizowany inny projekt na zaliczenie.
 
-- [ ] Dokumentacja opisująca przeznaczenie oraz przypadki użycia aplikacji w postaci diagramów UML
+Projekt proszę wysłać jako link do githuba.
 
-### Project requirements for grade > 4
-
-- [ ]  Osiągnięcie "glory of rest" (hateoas)
-- [x] Wykorzystanie do projektowania i dokumentacji API narzędzia typu [swagger.io](https://swagger.io/) lub
-  alternatywnych (Postman może importować ze swaggera)
-- [ ] Bardziej złożona logika wykorzystująca wzorce projektowe ale nie wymuszane przez framework Spring
-- [ ] Poprawnie wykorzystać jeden ze starterów aplikacji SpringBoot’a
-
-### Dla chętnych
-
-- [ ] Prosty front-end do konsumpcji endpointów Rest-owych
-- [ ] Wykorzystać JWT jwt.io
-
-
+Projekt powinien zawierać opis funkcjonalności, skrypt do zbudowania bazy danych, oraz inne opisy sposobu uruchomienia jeżeli potrzeba.
