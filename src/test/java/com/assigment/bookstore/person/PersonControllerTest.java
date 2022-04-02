@@ -128,11 +128,4 @@ class PersonControllerTest {
         personService.removeOne(person.getEmail());
     }
 
-
-//    @Test
-//    void getMyInfo() throws Exception {
-//        mockMvc.perform(get(url.toString() + "/persons/me"))
-//                .andDo(print())
-//                .andExpect(status().is(HttpStatus.OK.value()));
-//    }
 }

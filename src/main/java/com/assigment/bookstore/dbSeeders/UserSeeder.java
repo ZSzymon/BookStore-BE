@@ -8,6 +8,7 @@ import com.assigment.bookstore.securityJwt.models.User;
 import com.assigment.bookstore.securityJwt.repository.RoleRepository;
 import com.assigment.bookstore.securityJwt.repository.UserRepository;
 import com.assigment.bookstore.securityJwt.security.jwt.AuthEntryPointJwt;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -20,23 +21,17 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.assigment.bookstore.dbSeeders.SeederUtils.AssureRolesExistsInDb;
+
 @Configuration
+@Slf4j
 public class UserSeeder {
-    private static final Logger log = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
     @Bean
     CommandLineRunner addUsers(UserRepository userRepository, PersonRepository personRepository, PasswordEncoder encoder, RoleRepository roleRepository) {
         return args -> {
 
-            if (roleRepository.findByName(ERole.ROLE_USER).isEmpty()) {
-                roleRepository.insert(new Role(ERole.ROLE_USER));
-            }
-            if (roleRepository.findByName(ERole.ROLE_ADMIN).isEmpty()) {
-                roleRepository.insert(new Role(ERole.ROLE_ADMIN));
-            }
-            if (roleRepository.findByName(ERole.ROLE_MODERATOR).isEmpty()) {
-                roleRepository.insert(new Role(ERole.ROLE_MODERATOR));
-            }
+            AssureRolesExistsInDb(roleRepository);
 
             Role userRole = roleRepository.findByName(ERole.ROLE_USER).get();
             Role mod = roleRepository.findByName(ERole.ROLE_MODERATOR).get();
@@ -46,14 +41,23 @@ public class UserSeeder {
                     new User("user", "user@gmail.com", encoder.encode("password"), new HashSet<>(List.of(userRole))),
                     new User("mod", "mod@gmail.com", encoder.encode("password"), new HashSet<>(List.of(userRole, mod))),
                     new User("admin", "admin@gmail.com", encoder.encode("password"),
-                            new HashSet<>(List.of(userRole, mod, admin)))
+                            new HashSet<>(List.of(userRole, mod, admin))),
+                    new User("PZLA", "pzla@gmail.com", encoder.encode("password"),
+                            new HashSet<>(List.of(userRole))),
+                    new User("UMCS", "umcs@gmail.com", encoder.encode("password"),
+                            new HashSet<>(List.of(userRole))),
+                    new User("WZ", "wz@gmail.com", encoder.encode("password"),
+                            new HashSet<>(List.of(userRole)))
 
             ));
 
             List<Person> persons = new ArrayList<>(Arrays.asList(
                     new Person("admin@gmail.com"),
                     new Person("mod@gmail.com"),
-                    new Person("user@gmail.com")
+                    new Person("user@gmail.com"),
+                    new Person("pzla@gmail.com"),
+                    new Person("umcs@gmail.com"),
+                    new Person("wz@gmail.com")
             ));
 
 
@@ -75,19 +79,19 @@ public class UserSeeder {
                                         log.info("Inserted person: " + person.getEmail());
                                     }));
 
-            persons.forEach(p ->{
-                    if(p.getUser() == null){
-                        Person person = personRepository.findByEmail(p.getEmail()).get();
-                        User user = userRepository.findByEmail(p.getEmail()).get();
-                        person.setUser(user);
-                        personRepository.save(person);
-                    }
+            persons.forEach(p -> {
+                if (p.getUser() == null) {
+                    Person person = personRepository.findByEmail(p.getEmail()).get();
+                    User user = userRepository.findByEmail(p.getEmail()).get();
+                    person.setUser(user);
+                    personRepository.save(person);
+                }
 
 
             });
 
-            users.forEach(u ->{
-                if(u.getPerson()==null){
+            users.forEach(u -> {
+                if (u.getPerson() == null) {
                     Person person = personRepository.findByEmail(u.getEmail()).get();
                     User user = userRepository.findByEmail(u.getEmail()).get();
                     user.setPerson(person);
