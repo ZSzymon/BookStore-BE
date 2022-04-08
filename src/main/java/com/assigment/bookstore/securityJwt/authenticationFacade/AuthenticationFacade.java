@@ -3,6 +3,7 @@ package com.assigment.bookstore.securityJwt.authenticationFacade;
 import com.assigment.bookstore.exceptions.NotFoundAuthenticationExecution;
 import com.assigment.bookstore.person.Person;
 import com.assigment.bookstore.securityJwt.security.services.UserDetailsImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +16,6 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
-
-
 
     public static Authentication getAuthenticationStatic() {
         return SecurityContextHolder.getContext().getAuthentication();
@@ -61,5 +60,9 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     }
     public static boolean isAdminStatic(Authentication auth) {
         return auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+    public boolean isUser(Authentication auth) {
+
+        return auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"));
     }
 }

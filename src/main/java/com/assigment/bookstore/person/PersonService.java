@@ -8,6 +8,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -30,7 +31,6 @@ public class PersonService {
                 .orElseThrow(() -> new NotFoundException("Person", email));
 
     }
-
     public ResponseEntity<?> removeOne(String email){
         personRepository.removePersonByEmail(email);
         return ResponseEntity.ok("");
