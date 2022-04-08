@@ -30,4 +30,5 @@ public class BookDTO implements Serializable {
         this.author = author;
         this.publisher = publisher;
     }
+
 }

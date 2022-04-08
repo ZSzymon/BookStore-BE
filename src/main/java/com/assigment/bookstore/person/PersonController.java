@@ -1,5 +1,6 @@
 package com.assigment.bookstore.person;
 
+import com.assigment.bookstore.securityJwt.authenticationFacade.IAuthenticationFacade;
 import com.assigment.bookstore.securityJwt.security.services.UserDetailsImpl;
 import com.assigment.bookstore.securityJwt.security.services.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class PersonController {
 
     private final PersonService personService;
 
+    private final IAuthenticationFacade authenticationFacade;
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public CollectionModel<EntityModel<Person>> all(){
@@ -31,8 +33,8 @@ public class PersonController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<EntityModel<Person>> me(Authentication authentication){
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    public ResponseEntity<EntityModel<Person>> me(){
+        UserDetailsImpl userDetails = authenticationFacade.getUserDetailsImpl();
         return personService.getByEmail(userDetails.getEmail());
     }
     @PostMapping("")
@@ -40,6 +42,7 @@ public class PersonController {
         return personService.addOne(person);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{email}")
     public ResponseEntity<?> removeOne(@PathVariable String email){
         return personService.removeOne(email);

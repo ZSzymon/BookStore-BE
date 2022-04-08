@@ -54,9 +54,9 @@ public class BookService {
                 {
                     log.info("Creating new book: "+ bookDTO.getTitle());
                     Person publisher = personRepository.findByEmail(bookDTO.getPublisher().getEmail())
-                            .orElse(personRepository.insert(new Person(bookDTO.getPublisher().getEmail())));
+                            .orElseGet(()->personRepository.insert(new Person(bookDTO.getPublisher().getEmail())));
                     Person author = personRepository.findByEmail(bookDTO.getAuthor().getEmail())
-                            .orElse(personRepository.insert(new Person(bookDTO.getAuthor().getEmail())));
+                            .orElseGet(()->personRepository.insert(new Person(bookDTO.getAuthor().getEmail())));
 
                     Book newPerson = new Book(bookDTO.getTitle(), author, publisher);
                     EntityModel<BookDTO> entityModel = bookAssembler.toModel(bookRepository.insert(newPerson));

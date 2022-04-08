@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -54,6 +55,8 @@ class BookControllerTest {
     @Autowired
     BookController bookController;
 
+    @Autowired
+    BookRepository bookRepository;
     @Test
     void all() throws Exception {
         mockMvc.perform(get(url + "/books"))
@@ -62,22 +65,61 @@ class BookControllerTest {
 
     @Test
     void getOne() throws Exception {
-
+        //GIVEN
+        bookRepository.findByTitle("Height Altitude Training in Iten").ifPresentOrElse(book -> {},
+                ()-> bookRepository.insert(new Book("Height Altitude Training in Iten")));
+        //WHEN
         mockMvc.perform(get(url + "/books/"+"Height Altitude Training in Iten"))
-                .andDo(print()).andExpect(status().isOk());
+                .andDo(print())
+                //THEN
+                .andExpect(status().isOk());
+
+        //CLEAN
+        bookRepository.findByTitle("Height Altitude Training in Iten").ifPresentOrElse(book -> {},
+                ()-> bookRepository.removeBookByTitle("Height Altitude Training in Iten"));
     }
 
     @Test
     @WithMockUser(value = "admin", roles = {"ADMIN", "MOD", "USER"})
-    void addOneWhenAuthorDoNotExistInDB() throws Exception {
+    void addOneAsAdminWhenAuthorOrPublisherNotExistInDB() throws Exception {
+        //GIVEN
         PersonDTO author = new PersonDTO(new Person("ghostwriter@gmail.com"));
         PersonDTO publisher = new PersonDTO(new Person("umcs@gmail.com"));
-
         BookDTO bookDTO = new BookDTO("The book that shouldn't exist", author, publisher);
+
+        bookRepository.findByTitle(bookDTO.getTitle()).ifPresent(
+                book -> {bookRepository.delete(book);}
+        );
+        //WHEN
         mockMvc.perform(post(url+"/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(asJsonString(bookDTO)));
+                .content(asJsonString(bookDTO)))
+                //THEN
+                .andExpect(status().is(HttpStatus.CREATED.value()));
+        assert bookRepository.findByTitle("The book that shouldn't exist").isPresent();
+    }
+
+    @WithMockUser(value = "user", roles = {"USER"})
+    @Test
+    void addOneAsUserFail() throws Exception {
+        //GIVEN
+        PersonDTO author = new PersonDTO(new Person("ghostwriter@gmail.com"));
+        PersonDTO publisher = new PersonDTO(new Person("umcs@gmail.com"));
+        BookDTO bookDTO = new BookDTO("The book that shouldn't exist", author, publisher);
+
+        bookRepository.findByTitle(bookDTO.getTitle()).ifPresent(
+                book -> {bookRepository.delete(book);}
+        );
+        //WHEN
+        mockMvc.perform(post(url+"/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(bookDTO)))
+                //THEN
+                .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
+        assert bookRepository.findByTitle("The book that shouldn't exist").isEmpty();
+
     }
 
     @Test

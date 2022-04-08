@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.assigment.bookstore.exceptions.NotFoundException;
+import com.assigment.bookstore.person.Person;
+import com.assigment.bookstore.person.PersonController;
+import com.assigment.bookstore.person.PersonRepository;
 import com.assigment.bookstore.securityJwt.payload.request.LoginRequest;
 import com.assigment.bookstore.securityJwt.payload.request.SignupRequest;
 import com.assigment.bookstore.securityJwt.payload.response.JwtResponse;
@@ -24,6 +28,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +52,9 @@ public class AuthController {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	PersonRepository personRepository;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -134,9 +142,31 @@ public class AuthController {
 //			});
 //		}
 
+
 		user.setRoles(roles);
 		userRepository.save(user);
 
+		Person person = new Person(user.getEmail());
+		personRepository.save(person);
+		createOneToOneRelation(user.getEmail());
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+
+	private void addPersonToUser(String email){
+		Person p = personRepository.findByEmail(email).orElseThrow(()->new NotFoundException("Person", email));
+		User u = userRepository.findByEmail(email).orElseThrow(()->new NotFoundException("User", email));
+		u.setPerson(p);
+		userRepository.save(u);
+	}
+	private void addUserToPerson(String email){
+		Person p = personRepository.findByEmail(email).orElseThrow(()->new NotFoundException("Person", email));
+		User u = userRepository.findByEmail(email).orElseThrow(()->new NotFoundException("User", email));
+		p.setUser(u);
+		personRepository.save(p);
+	}
+	private void createOneToOneRelation(String email) {
+		addPersonToUser(email);
+		addUserToPerson(email);
+
 	}
 }

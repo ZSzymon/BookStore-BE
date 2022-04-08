@@ -10,6 +10,7 @@ import com.assigment.bookstore.securityJwt.models.User;
 import com.assigment.bookstore.securityJwt.repository.RoleRepository;
 import com.assigment.bookstore.securityJwt.repository.UserRepository;
 import com.assigment.bookstore.securityJwt.security.jwt.AuthEntryPointJwt;
+import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +33,17 @@ public class BookSeeder {
     @Bean
     CommandLineRunner addBooks(BookRepository bookRepository, PersonRepository personRepository) {
         return args -> {
+            Faker faker = new Faker();
+
             List<Book> books = new ArrayList<>(Arrays.asList(
                     new Book("Height Altitude Training in Iten", personRepository.findByEmail("admin@gmail.com").get(), personRepository.findByEmail("pzla@gmail.com").get()),
                     new Book("Student who is not visible", personRepository.findByEmail("admin@gmail.com").get(), personRepository.findByEmail("pzla@gmail.com").get()),
                     new Book("Suitcase - My Dear Friend", personRepository.findByEmail("umcs@gmail.com").get(), personRepository.findByEmail("pzla@gmail.com").get())
             ));
+
+            for (int i = 0; i < 50; i++) {
+
+            }
 
             books.forEach(book -> {
                 bookRepository.findByTitle(book.getTitle())

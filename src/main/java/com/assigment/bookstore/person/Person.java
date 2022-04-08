@@ -1,6 +1,7 @@
 package com.assigment.bookstore.person;
 
 import com.assigment.bookstore.securityJwt.models.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Person {
     private LocalDateTime created = LocalDateTime.now();
 
     @DBRef
+    @JsonIgnore
     private User user;
     //For deserialisation purposes Person must have a zero-arg constructor.
     public Person(){}

@@ -37,4 +37,7 @@ public class Book {
         this.publisher = publisher;
     }
 
+    public Book(String title) {
+        this.title = title;
+    }
 }
