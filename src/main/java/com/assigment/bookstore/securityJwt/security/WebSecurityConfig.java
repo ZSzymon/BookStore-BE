@@ -82,7 +82,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if(isSecureOn){
             http.cors().and().csrf().disable()
                     .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -95,20 +94,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated();
 
             http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        }else{
-            http.cors().and().csrf().disable()
-                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                    .authorizeRequests()
-                    .antMatchers("/api/v1/**").permitAll()
-                    .antMatchers("/api/auth/**").permitAll()
-                    .antMatchers("/api/test/**").permitAll()
-                    .antMatchers(AUTH_WHITELIST).permitAll()
 
-                    .anyRequest().authenticated();
-
-            http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        }
 
     }
 }
