@@ -19,9 +19,9 @@ public class BookDTO implements Serializable {
     private PersonDTO publisher;
 
     public BookDTO(Book book) {
-        this.title = book.getTitle();
-        this.author = new PersonDTO(book.getAuthor());
-        this.publisher = new PersonDTO(book.getPublisher());
+        this.title = book == null ? "" : book.getTitle();
+        this.author = (book == null) ? null : new PersonDTO(book.getAuthor());
+        this.publisher =(book == null) ? null : new PersonDTO(book.getPublisher());
     }
 
     @PersistenceConstructor

@@ -13,9 +13,9 @@ public class PersonDTO {
 
     @PersistenceConstructor
     public PersonDTO(Person p) {
-        this.firstName = p.getFirstName();
-        this.secondName = p.getSecondName();
-        this.email = p.getEmail();
+        this.firstName = p == null ? " " : p.getFirstName();
+        this.secondName = p == null ? " " : p.getSecondName();
+        this.email = p == null ? " " : p.getEmail();
     }
 
     @PersistenceConstructor

@@ -8,6 +8,7 @@ import com.assigment.bookstore.securityJwt.models.User;
 import com.assigment.bookstore.securityJwt.repository.RoleRepository;
 import com.assigment.bookstore.securityJwt.repository.UserRepository;
 import com.assigment.bookstore.securityJwt.security.jwt.AuthEntryPointJwt;
+import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static com.assigment.bookstore.dbSeeders.SeederUtils.AssureRolesExistsInDb;
 
@@ -50,15 +48,17 @@ public class UserSeeder {
                             new HashSet<>(List.of(userRole)))
 
             ));
+            Faker faker = new Faker(new Locale("pl_PL"));
+            for (int i = 0; i < 1; i++) {
+                String userName = faker.name().username().toLowerCase(Locale.ROOT);
+                User u = new User(userName, userName+"@gmail.com",String.valueOf("password".hashCode()));
+                users.add(u);
+            }
 
-            List<Person> persons = new ArrayList<>(Arrays.asList(
-                    new Person("admin@gmail.com"),
-                    new Person("mod@gmail.com"),
-                    new Person("user@gmail.com"),
-                    new Person("pzla@gmail.com"),
-                    new Person("umcs@gmail.com"),
-                    new Person("wz@gmail.com")
-            ));
+            List<Person> persons = new ArrayList<>();
+            users.forEach(u -> {
+                persons.add(new Person(u.getEmail()));
+            });
 
 
             users.forEach(user -> userRepository.findByUsername(user.getUsername())
