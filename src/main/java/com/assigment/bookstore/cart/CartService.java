@@ -25,7 +25,7 @@ public class CartService {
     PersonRepository personRepository;
 
     public ResponseEntity<?> one(String personEmail) {
-        if (authenticationFacade.isModifingOwnData(personEmail)) {
+        if (!authenticationFacade.isModifingOwnData(personEmail) && !authenticationFacade.isAdmin()) {
             return new ResponseEntity<>("You are not allowed to see " + personEmail + "cart.", HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(cartRepository.findByPersonEmail(personEmail)
@@ -57,6 +57,11 @@ public class CartService {
     }
 
     public ResponseEntity<?> clearOne(String personEmail) {
+        boolean isModifyingOwnData = authenticationFacade.isModifingOwnData(personEmail);
+        boolean isAdmin = authenticationFacade.isAdmin();
+        if(!isAdmin && !isModifyingOwnData){
+            return new ResponseEntity<>("You are not allowed to clear " + personEmail + "cart.", HttpStatus.FORBIDDEN);
+        }
         Optional<Person> personOptional = personRepository.findByEmail(personEmail);
         if (personOptional.isPresent()) {
             Person p = personOptional.get();

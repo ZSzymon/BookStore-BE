@@ -6,7 +6,9 @@ import com.assigment.bookstore.person.Person;
 import com.assigment.bookstore.securityJwt.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -18,7 +20,8 @@ import java.util.List;
 
 @Data
 @Slf4j
-@Document
+@Getter
+@Setter
 @NoArgsConstructor
 public class Cart {
     @Id
@@ -34,5 +37,12 @@ public class Cart {
     public Cart(String email) {
         this.personEmail = email;
         this.books = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "personEmail='" + personEmail + '\'' +
+                '}';
     }
 }

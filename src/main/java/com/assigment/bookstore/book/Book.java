@@ -3,21 +3,20 @@ package com.assigment.bookstore.book;
 import com.assigment.bookstore.person.Gender;
 import com.assigment.bookstore.person.Person;
 import com.assigment.bookstore.securityJwt.models.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDateTime;
 
 @Data
-@Document
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book {
@@ -25,9 +24,10 @@ public class Book {
     @Id
     private String id;
     private String title;
-    @DBRef
+
+    @DocumentReference(lazy = true)
     private Person author;
-    @DBRef
+    @DocumentReference(lazy = true)
     private Person publisher;
 
     @PersistenceConstructor
@@ -39,5 +39,13 @@ public class Book {
 
     public Book(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                ", title='" + title + '\'' +
+                ", author=" + author +
+                '}';
     }
 }

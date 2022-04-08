@@ -25,6 +25,7 @@ public class BookSeeder implements ISeeder {
     PersonRepository personRepository;
     AuthController authController;
 
+
     private Person findOrCreate(PersonRepository repository, String email){
         Person p = repository.findByEmail(email).orElseGet(()->{
             String login = email.substring(0, email.indexOf("@"));

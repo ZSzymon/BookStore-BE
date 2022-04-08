@@ -38,6 +38,7 @@ public class PersonController {
         return personService.getByEmail(userDetails.getEmail());
     }
     @PostMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EntityModel<Person>> addOne(@RequestBody Person person){
         return personService.addOne(person);
     }

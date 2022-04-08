@@ -126,7 +126,7 @@ public class UserSeeder implements ISeeder {
         Role mod = roleRepository.findByName(ERole.ROLE_MODERATOR).get();
         Role admin = roleRepository.findByName(ERole.ROLE_ADMIN).get();
 
-        assertAdminAndModCreation(authController, userRepository, userRole, mod, admin);
+        assertAdminAndModAndUserCreation(authController, userRepository, userRole, mod, admin);
         Faker fake = new Faker();
         for (int i = 0; i < 10; i++) {
             String login = fake.name().username();
@@ -136,7 +136,7 @@ public class UserSeeder implements ISeeder {
 
     }
 
-    private void assertAdminAndModCreation(AuthController authController, UserRepository userRepository, Role userRole, Role mod, Role admin) {
+    private void assertAdminAndModAndUserCreation(AuthController authController, UserRepository userRepository, Role userRole, Role mod, Role admin) {
         if (userRepository.findByUsername("admin").isEmpty()) {
             authController.registerUser(new SignupRequest("admin", "admin@gmail.com", "password"));
             User adminUser = userRepository.findByEmail("admin@gmail.com").orElseThrow(() -> new NotFoundException("User", "admin@gmail.com"));
@@ -148,6 +148,12 @@ public class UserSeeder implements ISeeder {
             User modUser = userRepository.findByEmail("mod@gmail.com").orElseThrow(() -> new NotFoundException("User", "mod@gmail.com"));
             modUser.setRoles(Set.of(mod, userRole));
             userRepository.save(modUser);
+        }
+        if (userRepository.findByUsername("user").isEmpty()) {
+            authController.registerUser(new SignupRequest("user", "user@gmail.com", "password"));
+            User user = userRepository.findByEmail("user@gmail.com").orElseThrow(() -> new NotFoundException("User", "user@gmail.com"));
+            user.setRoles(Set.of(userRole));
+            userRepository.save(user);
         }
 
     }

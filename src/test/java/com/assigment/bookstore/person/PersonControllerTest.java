@@ -1,7 +1,5 @@
 package com.assigment.bookstore.person;
 
-import com.assigment.bookstore.securityJwt.models.User;
-import com.assigment.bookstore.securityJwt.security.services.UserDetailsServiceImpl;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

@@ -17,6 +17,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     }
 
 
+
     public static Authentication getAuthenticationStatic() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
@@ -50,12 +51,15 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         }
     }
 
-    public static boolean isAdmin(){
+    public static boolean isAdminStatic(){
         Authentication authentication = AuthenticationFacade.getAuthenticationStatic();
-        return AuthenticationFacade.isAdmin(authentication);
+        return AuthenticationFacade.isAdminStatic(authentication);
     }
-
-    public static boolean isAdmin(Authentication auth) {
+    public boolean isAdmin(){
+        Authentication auth = getAuthentication();
+        return auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+    public static boolean isAdminStatic(Authentication auth) {
         return auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 }
