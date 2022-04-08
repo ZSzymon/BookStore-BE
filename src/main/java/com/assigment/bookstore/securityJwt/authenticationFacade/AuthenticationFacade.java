@@ -33,6 +33,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         }
         return userDetails;
     }
+
     public static boolean isModifingOwnData(Person person, Authentication auth) {
         try{
             return auth != null && ((UserDetailsImpl) auth.getPrincipal()).getEmail().equals(person.getEmail());
@@ -40,13 +41,15 @@ public class AuthenticationFacade implements IAuthenticationFacade {
             return false;
         }
     }
-    public static boolean isModifingOwnData(String personString, Authentication auth) {
+    public boolean isModifingOwnData(String personString) {
         try{
+            Authentication auth = getAuthentication();
             return auth != null && ((UserDetailsImpl) auth.getPrincipal()).getEmail().equals(personString);
         }catch (ClassCastException classCastException){
             return false;
         }
     }
+
     public static boolean isAdmin(){
         Authentication authentication = AuthenticationFacade.getAuthenticationStatic();
         return AuthenticationFacade.isAdmin(authentication);

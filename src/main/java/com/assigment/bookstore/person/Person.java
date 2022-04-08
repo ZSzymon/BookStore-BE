@@ -1,5 +1,6 @@
 package com.assigment.bookstore.person;
 
+import com.assigment.bookstore.cart.Cart;
 import com.assigment.bookstore.securityJwt.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,10 @@ public class Person {
     @DBRef
     @JsonIgnore
     private User user;
+
+    @DBRef
+    @JsonIgnore
+    private Cart cart;
     //For deserialisation purposes Person must have a zero-arg constructor.
     public Person(){}
 

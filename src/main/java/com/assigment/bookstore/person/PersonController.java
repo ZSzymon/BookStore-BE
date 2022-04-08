@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class PersonController {
 
     private final PersonService personService;
-
     private final IAuthenticationFacade authenticationFacade;
+
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public CollectionModel<EntityModel<Person>> all(){

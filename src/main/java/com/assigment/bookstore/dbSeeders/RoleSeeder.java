@@ -3,31 +3,32 @@ package com.assigment.bookstore.dbSeeders;
 import com.assigment.bookstore.securityJwt.models.ERole;
 import com.assigment.bookstore.securityJwt.models.Role;
 import com.assigment.bookstore.securityJwt.repository.RoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-@Configuration
-public class RoleSeeder{
+@Component
+@Slf4j
+@AllArgsConstructor
+public class RoleSeeder implements ISeeder {
 
-    private static final Logger log = LoggerFactory.getLogger(RoleSeeder.class);
+
+    RoleRepository roleRepository;
 
 
-    @Bean
-    public static CommandLineRunner seedRoles(RoleRepository repository) {
-        return args -> {
-            Arrays.stream(ERole.values()).forEach(eRole ->
-                    repository.findByName(eRole)
-                            .ifPresentOrElse(role -> {log.info("Role: " + eRole.toString() + " already exist.");
-                                        },
-                                    () -> {
-                                        repository.save(new Role(eRole));
-                                        log.info("Inserted role: " + eRole.toString());
-                                    }));
-        };
-    }
+    public void seed() {
+        Arrays.stream(ERole.values()).forEach(eRole ->
+                roleRepository.findByName(eRole)
+                        .ifPresentOrElse(role -> {log.info("Role: " + eRole.toString() + " already exist.");
+                            },
+                                () -> {
+                            roleRepository.save(new Role(eRole));
+                            log.info("Inserted role: " + eRole.toString());
+                        }));
+
+        }
+
 }
