@@ -22,13 +22,12 @@ public class Order {
     private List<Book> orderList;
     private String clientEmail;
     private String description;
+    private EOrderStatus orderStatus;
 
-    @Builder
-    @PersistenceConstructor
-    public Order(String id, List<Book> orderList, String clientEmail, String description) {
-        this.id = id;
-        this.orderList = orderList;
-        this.clientEmail = clientEmail;
-        this.description = description;
+    public Order(OrderDto orderDto, String email) {
+        orderList = orderDto.getBookList();
+        clientEmail = email;
+        description = orderDto.getDescription();
+        orderStatus = EOrderStatus.ORDERED;
     }
 }

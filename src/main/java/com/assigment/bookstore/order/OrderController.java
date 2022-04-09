@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController extends GenericController<Order, OrderDto> {
 
 
-    @Autowired
     private OrderService orderService;
 
-    public OrderController(IGenericService<Order, OrderDto> service) {
+    public OrderController(OrderService service) {
         super(service);
+        orderService = service;
     }
+
+
+
 
 }

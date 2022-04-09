@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface OrderRepository extends MongoRepository<Order, String> {
     Optional<Order> findByClientEmail(String email);
     void removeOrderByClientEmail(String email);
+
 }
 
