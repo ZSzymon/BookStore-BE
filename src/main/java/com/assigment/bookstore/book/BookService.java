@@ -2,8 +2,8 @@ package com.assigment.bookstore.book;
 
 
 import com.assigment.bookstore.exceptions.NotFoundException;
-import com.assigment.bookstore.person.Person;
 import com.assigment.bookstore.person.PersonRepository;
+import com.assigment.bookstore.person.models.Person;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -53,13 +52,22 @@ public class BookService {
                 .orElseGet(() ->
                 {
                     log.info("Creating new book: "+ bookDTO.getTitle());
-                    Person publisher = personRepository.findByEmail(bookDTO.getPublisher().getEmail())
-                            .orElseGet(()->personRepository.insert(new Person(bookDTO.getPublisher().getEmail())));
-                    Person author = personRepository.findByEmail(bookDTO.getAuthor().getEmail())
-                            .orElseGet(()->personRepository.insert(new Person(bookDTO.getAuthor().getEmail())));
+                    Person publisher = null, author = null;
+                    if (bookDTO.getPublisher()!=null) {
+                        publisher = personRepository.findByEmail(bookDTO.getPublisher().getEmail())
+                                .orElseGet(()-> {
+                                    return personRepository.insert(new Person(bookDTO.getPublisher().getEmail()));
+                                }); 
+                    }
+                    if (bookDTO.getAuthor()!=null) {
+                        author = personRepository.findByEmail(bookDTO.getAuthor().getEmail())
+                                .orElseGet(()->personRepository.insert(new Person(bookDTO.getAuthor().getEmail())));
+                    }
+                    
 
-                    Book newPerson = new Book(bookDTO.getTitle(), author, publisher);
-                    EntityModel<BookDTO> entityModel = bookAssembler.toModel(bookRepository.insert(newPerson));
+
+                    Book newBook = new Book(bookDTO.getTitle(), author, publisher);
+                    EntityModel<BookDTO> entityModel = bookAssembler.toModel(bookRepository.insert(newBook));
                     return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
                 });
 

@@ -1,13 +1,8 @@
 package com.assigment.bookstore.book;
 
-import com.assigment.bookstore.person.Person;
-import com.assigment.bookstore.person.PersonDTO;
-import lombok.AllArgsConstructor;
+import com.assigment.bookstore.person.models.PersonDTO;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.io.Serializable;
 

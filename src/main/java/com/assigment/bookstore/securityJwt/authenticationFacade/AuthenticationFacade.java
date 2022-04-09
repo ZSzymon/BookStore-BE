@@ -1,9 +1,8 @@
 package com.assigment.bookstore.securityJwt.authenticationFacade;
 
 import com.assigment.bookstore.exceptions.NotFoundAuthenticationExecution;
-import com.assigment.bookstore.person.Person;
+import com.assigment.bookstore.person.models.Person;
 import com.assigment.bookstore.securityJwt.security.services.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

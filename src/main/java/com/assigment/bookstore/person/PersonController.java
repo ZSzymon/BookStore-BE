@@ -1,14 +1,13 @@
 package com.assigment.bookstore.person;
 
+import com.assigment.bookstore.person.models.Person;
 import com.assigment.bookstore.securityJwt.authenticationFacade.IAuthenticationFacade;
 import com.assigment.bookstore.securityJwt.security.services.UserDetailsImpl;
-import com.assigment.bookstore.securityJwt.security.services.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 

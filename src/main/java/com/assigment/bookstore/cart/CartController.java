@@ -1,11 +1,9 @@
 package com.assigment.bookstore.cart;
 
-import com.assigment.bookstore.person.Person;
 import com.assigment.bookstore.person.PersonService;
 import com.assigment.bookstore.securityJwt.authenticationFacade.IAuthenticationFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +33,11 @@ public class CartController {
     public ResponseEntity<?> addCart(@RequestBody Cart cart){
         //Cart will be added to Person of email cart.email
         return cartService.addOne(cart);
+    }
+
+    @PutMapping("{personEmail}")
+    public ResponseEntity<?> addBookToCart(@PathVariable String personEmail, @RequestBody String name){
+        return cartService.addBookToCart(personEmail,name);
     }
     @DeleteMapping("{personEmail}")
     public ResponseEntity<?> clearCart(@PathVariable String personEmail){

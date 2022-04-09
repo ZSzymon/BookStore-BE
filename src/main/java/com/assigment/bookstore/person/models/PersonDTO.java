@@ -1,4 +1,4 @@
-package com.assigment.bookstore.person;
+package com.assigment.bookstore.person.models;
 
 import lombok.Data;
 import org.springframework.data.annotation.PersistenceConstructor;

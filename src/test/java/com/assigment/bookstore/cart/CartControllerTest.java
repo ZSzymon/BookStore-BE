@@ -2,9 +2,7 @@ package com.assigment.bookstore.cart;
 
 import com.assigment.bookstore.book.Book;
 import com.assigment.bookstore.book.BookRepository;
-import com.assigment.bookstore.book.BookService;
 import com.assigment.bookstore.person.PersonRepository;
-import lombok.AllArgsConstructor;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -17,34 +15,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.net.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import com.assigment.bookstore.securityJwt.models.User;
-import com.assigment.bookstore.securityJwt.security.services.UserDetailsServiceImpl;
-import org.junit.Before;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static com.assigment.bookstore.util.asJsonString;
-import static org.assertj.core.api.InstanceOfAssertFactories.COLLECTION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -157,6 +136,26 @@ class CartControllerTest {
         int cartsInDB = cartRepository.findAll().size();
         assert personsInDb == cartsInDB;
 
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void addBookToCartSuccess() throws Exception {
+        String bookTitle = "XWDAA W";
+        String email = "user@gmail.com";
+
+        Book book = bookRepository.findByTitle(bookTitle)
+                .orElseGet(()->bookRepository.insert(new Book(bookTitle)));
+
+        mockMvc.perform(put(url+email)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(book.getTitle()))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assert cartRepository.findByPersonEmail(email).get()
+                .getBooks().stream().anyMatch(b -> b.getTitle().equals(bookTitle));
     }
 
 }

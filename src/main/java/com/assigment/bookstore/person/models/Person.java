@@ -1,19 +1,16 @@
-package com.assigment.bookstore.person;
+package com.assigment.bookstore.person.models;
 
 import com.assigment.bookstore.cart.Cart;
 import com.assigment.bookstore.securityJwt.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
 @Getter

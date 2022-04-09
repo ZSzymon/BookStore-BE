@@ -3,7 +3,7 @@ package com.assigment.bookstore.dbSeeders;
 import com.assigment.bookstore.cart.Cart;
 import com.assigment.bookstore.cart.CartRepository;
 import com.assigment.bookstore.exceptions.NotFoundException;
-import com.assigment.bookstore.person.Person;
+import com.assigment.bookstore.person.models.Person;
 import com.assigment.bookstore.person.PersonRepository;
 import com.assigment.bookstore.securityJwt.controllers.AuthController;
 import com.assigment.bookstore.securityJwt.models.ERole;

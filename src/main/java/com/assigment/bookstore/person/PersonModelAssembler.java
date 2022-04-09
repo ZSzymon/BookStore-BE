@@ -1,6 +1,7 @@
 package com.assigment.bookstore.person;
 
 
+import com.assigment.bookstore.person.models.Person;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;

@@ -1,14 +1,16 @@
 package com.assigment.bookstore.person;
 
 
+import com.assigment.bookstore.cart.Cart;
+import com.assigment.bookstore.cart.CartRepository;
 import com.assigment.bookstore.exceptions.NotFoundException;
+import com.assigment.bookstore.person.models.Person;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -18,6 +20,7 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final PersonModelAssembler personAssembler;
+    private final CartRepository cartRepository;
 
     public CollectionModel<EntityModel<Person>> all() {
         log.info("Returning all persons");
@@ -32,6 +35,7 @@ public class PersonService {
 
     }
     public ResponseEntity<?> removeOne(String email){
+        cartRepository.deleteByPersonEmail(email);
         personRepository.removePersonByEmail(email);
         return ResponseEntity.ok("");
     }
@@ -46,8 +50,15 @@ public class PersonService {
                 .orElseGet(() ->
                 {
                     log.info("Creating new person: "+ person.getEmail());
+                    Cart cart = cartRepository.findByPersonEmail(person.getEmail())
+                            .orElseGet(()->cartRepository.insert(new Cart(person.getEmail())));
+
+
                     Person newPerson = new Person(person);
+                    newPerson.setCart(cart);
                     EntityModel<Person> entityModel = personAssembler.toModel(personRepository.insert(newPerson));
+
+
                     return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
                 });
 

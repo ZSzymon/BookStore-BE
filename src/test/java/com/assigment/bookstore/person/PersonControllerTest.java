@@ -1,5 +1,6 @@
 package com.assigment.bookstore.person;
 
+import com.assigment.bookstore.person.models.Person;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -16,10 +17,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 
 import static com.assigment.bookstore.util.asJsonString;
-import static org.assertj.core.api.InstanceOfAssertFactories.COLLECTION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

@@ -1,7 +1,7 @@
 package com.assigment.bookstore.book;
 
-import com.assigment.bookstore.person.Person;
-import com.assigment.bookstore.person.PersonDTO;
+import com.assigment.bookstore.person.models.Person;
+import com.assigment.bookstore.person.models.PersonDTO;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.assigment.bookstore.util.asJsonString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -58,12 +57,14 @@ class BookControllerTest {
     @Autowired
     BookRepository bookRepository;
     @Test
+    @WithMockUser
     void all() throws Exception {
         mockMvc.perform(get(url + "/books"))
                 .andDo(print()).andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser
     void getOne() throws Exception {
         //GIVEN
         bookRepository.findByTitle("Height Altitude Training in Iten").ifPresentOrElse(book -> {},
@@ -83,9 +84,9 @@ class BookControllerTest {
     @WithMockUser(value = "admin", roles = {"ADMIN", "MOD", "USER"})
     void addOneAsAdminWhenAuthorOrPublisherNotExistInDB() throws Exception {
         //GIVEN
-        PersonDTO author = new PersonDTO(new Person("ghostwriter@gmail.com"));
+        //PersonDTO author = new PersonDTO(null);
         PersonDTO publisher = new PersonDTO(new Person("umcs@gmail.com"));
-        BookDTO bookDTO = new BookDTO("The book that shouldn't exist", author, publisher);
+        BookDTO bookDTO = new BookDTO("The book that shouldn't exist", null, publisher);
 
         bookRepository.findByTitle(bookDTO.getTitle()).ifPresent(
                 book -> {bookRepository.delete(book);}
@@ -104,8 +105,8 @@ class BookControllerTest {
     @Test
     void addOneAsUserFail() throws Exception {
         //GIVEN
-        PersonDTO author = new PersonDTO(new Person("ghostwriter@gmail.com"));
-        PersonDTO publisher = new PersonDTO(new Person("umcs@gmail.com"));
+        PersonDTO author = new PersonDTO(new com.assigment.bookstore.person.models.Person("ghostwriter@gmail.com"));
+        PersonDTO publisher = new PersonDTO(new com.assigment.bookstore.person.models.Person("umcs@gmail.com"));
         BookDTO bookDTO = new BookDTO("The book that shouldn't exist", author, publisher);
 
         bookRepository.findByTitle(bookDTO.getTitle()).ifPresent(
