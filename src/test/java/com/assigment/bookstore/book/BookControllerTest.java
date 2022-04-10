@@ -86,7 +86,7 @@ class BookControllerTest {
         //GIVEN
         //PersonDTO author = new PersonDTO(null);
         PersonDTO publisher = new PersonDTO(new Person("umcs@gmail.com"));
-        BookDTO bookDTO = new BookDTO("The book that shouldn't exist", null, publisher);
+        BookDTO bookDTO = new BookDTO("The book that shouldn't exist", null, publisher,22.5);
 
         bookRepository.findByTitle(bookDTO.getTitle()).ifPresent(
                 book -> {bookRepository.delete(book);}
@@ -99,6 +99,8 @@ class BookControllerTest {
                 //THEN
                 .andExpect(status().is(HttpStatus.CREATED.value()));
         assert bookRepository.findByTitle("The book that shouldn't exist").isPresent();
+        assert bookRepository.findByTitle("The book that shouldn't exist").isPresent();
+
     }
 
     @WithMockUser(value = "user", roles = {"USER"})
@@ -107,7 +109,7 @@ class BookControllerTest {
         //GIVEN
         PersonDTO author = new PersonDTO(new com.assigment.bookstore.person.models.Person("ghostwriter@gmail.com"));
         PersonDTO publisher = new PersonDTO(new com.assigment.bookstore.person.models.Person("umcs@gmail.com"));
-        BookDTO bookDTO = new BookDTO("The book that shouldn't exist", author, publisher);
+        BookDTO bookDTO = new BookDTO("The book that shouldn't exist", author, publisher, 10);
 
         bookRepository.findByTitle(bookDTO.getTitle()).ifPresent(
                 book -> {bookRepository.delete(book);}

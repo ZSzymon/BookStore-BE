@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,5 +29,10 @@ public class BookOrder {
         this.clientEmail = email;
         this.description = description;
         this.orderStatus = EBookOrderStatus.CREATED;
+    }
+
+    public double getTotalOrderAmount(){
+        return orderList.stream().map(Book::getPrice)
+                .reduce(Double.valueOf("0"), Double::sum);
     }
 }

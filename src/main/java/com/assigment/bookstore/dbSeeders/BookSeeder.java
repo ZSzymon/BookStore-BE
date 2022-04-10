@@ -3,6 +3,7 @@ package com.assigment.bookstore.dbSeeders;
 import com.assigment.bookstore.book.Book;
 import com.assigment.bookstore.book.BookRepository;
 import com.assigment.bookstore.person.PersonRepository;
+import com.assigment.bookstore.person.models.Person;
 import com.assigment.bookstore.securityJwt.controllers.AuthController;
 import com.assigment.bookstore.securityJwt.payload.request.SignupRequest;
 import com.github.javafaker.Faker;
@@ -25,8 +26,8 @@ public class BookSeeder implements ISeeder {
     AuthController authController;
 
 
-    private com.assigment.bookstore.person.models.Person findOrCreate(PersonRepository repository, String email){
-        com.assigment.bookstore.person.models.Person p = repository.findByEmail(email).orElseGet(()->{
+    private Person findOrCreate(PersonRepository repository, String email){
+        Person p = repository.findByEmail(email).orElseGet(()->{
             String login = email.substring(0, email.indexOf("@"));
             SignupRequest signupRequest = new SignupRequest(login, email, "password");
             authController.registerUser(signupRequest);
@@ -40,11 +41,11 @@ public class BookSeeder implements ISeeder {
         List<com.assigment.bookstore.person.models.Person> persons = personRepository.findAll();
         List<Book> books = new ArrayList<>(Arrays.asList(
                 new Book("Height Altitude Training in Iten", findOrCreate(personRepository,"admin@gmail.com"),
-                        findOrCreate(personRepository,"mod@gmail.com")),
+                        findOrCreate(personRepository,"mod@gmail.com"),Double.valueOf("40")),
                 new Book("Student who is not visible", findOrCreate(personRepository, "admin@gmail.com"),
-                        findOrCreate(personRepository,"mod@gmail.com")),
+                        findOrCreate(personRepository,"mod@gmail.com"),Double.valueOf("40")),
                 new Book("Suitcase - My Dear Friend", findOrCreate(personRepository,"umcs@gmail.com"),
-                        findOrCreate(personRepository,"mod@gmail.com"))
+                        findOrCreate(personRepository,"mod@gmail.com"),Double.valueOf("40"))
         ));
 
         for (int i = 0; i < 30; i++) {
@@ -54,7 +55,8 @@ public class BookSeeder implements ISeeder {
             }
             Book b = new Book(faker.book().title(),
                     persons.get(faker.random().nextInt(0, personSize-1)),
-                    persons.get(faker.random().nextInt(0, personSize-1)));
+                    persons.get(faker.random().nextInt(0, personSize-1)),
+                    faker.random().nextInt(20, 40).doubleValue());
             books.add(b);
         }
         books.forEach(book -> {
@@ -67,13 +69,5 @@ public class BookSeeder implements ISeeder {
                         log.info("Book: "+ book.getTitle()+" inserted.");
                     });
         });
-
-
-
-
     }
-
-
-
-
 }

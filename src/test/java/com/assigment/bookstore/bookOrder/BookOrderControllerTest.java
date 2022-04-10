@@ -34,7 +34,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-class BookBookOrderControllerTest {
+class BookOrderControllerTest {
 
 
     @Autowired
@@ -47,7 +47,7 @@ class BookBookOrderControllerTest {
     private BookRepository bookRepository;
     private URL url = new URL("http", "localhost", 8080, "/api/v1/orders/");
 
-    BookBookOrderControllerTest() throws MalformedURLException {
+    BookOrderControllerTest() throws MalformedURLException {
 
     }
 
@@ -78,6 +78,8 @@ class BookBookOrderControllerTest {
                 .andDo(print()).andExpect(status().isCreated());
 
         BookOrder bookOrder = bookOrderRepository.findAllByClientEmail(email).get(0);
+        Double totalOrderAmount = bookOrder.getTotalOrderAmount();
+        assert totalOrderAmount.intValue() > 0;
         assert bookOrder.getClientEmail().equals(email);
         assert bookOrder.getOrderList().size()==orderedBooks.size();
         assert bookOrder.getOrderStatus().equals(EBookOrderStatus.CREATED);

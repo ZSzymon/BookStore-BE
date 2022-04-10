@@ -66,7 +66,7 @@ public class BookService {
                     
 
 
-                    Book newBook = new Book(bookDTO.getTitle(), author, publisher);
+                    Book newBook = new Book(bookDTO.getTitle(), author, publisher, bookDTO.getPrice());
                     EntityModel<BookDTO> entityModel = bookAssembler.toModel(bookRepository.insert(newBook));
                     return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
                 });

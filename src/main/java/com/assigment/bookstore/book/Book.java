@@ -22,11 +22,14 @@ public class Book {
     @DocumentReference(lazy = true)
     private Person publisher;
 
+    private double price;
+
     @PersistenceConstructor
-    public Book(String title, Person author, Person publisher) {
+    public Book(String title, Person author, Person publisher, double price) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
+        this.price = price;
     }
 
     public Book(String title) {
@@ -36,8 +39,8 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                ", title='" + title + '\'' +
-                ", author=" + author +
+                "title='" + title + '\'' +
+                ", price=" + price +
                 '}';
     }
 }

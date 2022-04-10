@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+
     }
 
     @Bean
@@ -90,8 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/auth/**").permitAll()
                     .antMatchers("/api/test/**").permitAll()
                     .antMatchers(AUTH_WHITELIST).permitAll()
-
-                    .anyRequest().authenticated();
+                    .anyRequest().permitAll();
 
             http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
