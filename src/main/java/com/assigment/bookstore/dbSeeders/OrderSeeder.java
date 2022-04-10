@@ -2,19 +2,14 @@ package com.assigment.bookstore.dbSeeders;
 
 import com.assigment.bookstore.book.Book;
 import com.assigment.bookstore.book.BookRepository;
-import com.assigment.bookstore.order.OrderController;
-import com.assigment.bookstore.order.OrderRepository;
-import com.assigment.bookstore.order.OrderService;
-import com.assigment.bookstore.order.models.Order;
-import com.assigment.bookstore.order.models.OrderDto;
+import com.assigment.bookstore.bookOrder.BookOrderRepository;
+import com.assigment.bookstore.bookOrder.models.BookOrder;
 import com.assigment.bookstore.person.PersonRepository;
 import com.assigment.bookstore.person.models.Person;
-import com.github.javafaker.Faker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -26,7 +21,7 @@ public class OrderSeeder implements ISeeder{
 
     BookRepository bookRepository;
     PersonRepository personRepository;
-    OrderRepository orderRepository;
+    BookOrderRepository bookOrderRepository;
     @Override
     public void seed() {
         List<Book> books = bookRepository.findAll();
@@ -35,12 +30,12 @@ public class OrderSeeder implements ISeeder{
         for (int i = 0; i < fakedOrders; i++) {
             List<Book> booksId = books.subList(books.size()/(i+2), books.size());
             String randomPersonEmail = persons.get(new Random(i).nextInt(0, persons.size() - 1)).getEmail();
-            Order order = new Order(
+            BookOrder bookOrder = new BookOrder(
                     booksId,
                     randomPersonEmail,
                     "FakeOrder"
                     );
-            orderRepository.insert(order);
+            bookOrderRepository.insert(bookOrder);
         }
 
 

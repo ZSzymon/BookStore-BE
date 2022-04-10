@@ -1,4 +1,4 @@
-package com.assigment.bookstore.order.models;
+package com.assigment.bookstore.bookOrder.models;
 
 import com.assigment.bookstore.book.Book;
 import lombok.Getter;
@@ -11,17 +11,17 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderDto {
+public class BookOrderDto {
     private List<String> bookList;
     private String description;
 
     @PersistenceConstructor
-    public OrderDto(List<String> bookList, String description) {
+    public BookOrderDto(List<String> bookList, String description) {
         this.bookList = bookList;
         this.description = description;
     }
 
-    public OrderDto(Order order) {
-        this.bookList = order.getOrderList().stream().map(Book::getId).toList();
+    public BookOrderDto(BookOrder bookOrder) {
+        this.bookList = bookOrder.getOrderList().stream().map(Book::getId).toList();
     }
 }

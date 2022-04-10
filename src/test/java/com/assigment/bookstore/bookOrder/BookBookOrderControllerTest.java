@@ -1,10 +1,10 @@
-package com.assigment.bookstore.order;
+package com.assigment.bookstore.bookOrder;
 
 import com.assigment.bookstore.book.Book;
 import com.assigment.bookstore.book.BookRepository;
-import com.assigment.bookstore.order.models.EOrderStatus;
-import com.assigment.bookstore.order.models.Order;
-import com.assigment.bookstore.order.models.OrderDto;
+import com.assigment.bookstore.bookOrder.models.EBookOrderStatus;
+import com.assigment.bookstore.bookOrder.models.BookOrder;
+import com.assigment.bookstore.bookOrder.models.BookOrderDto;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -34,11 +34,11 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-class OrderControllerTest {
+class BookBookOrderControllerTest {
 
 
     @Autowired
-    private OrderRepository orderRepository;
+    private BookOrderRepository bookOrderRepository;
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
@@ -47,7 +47,7 @@ class OrderControllerTest {
     private BookRepository bookRepository;
     private URL url = new URL("http", "localhost", 8080, "/api/v1/orders/");
 
-    OrderControllerTest() throws MalformedURLException {
+    BookBookOrderControllerTest() throws MalformedURLException {
 
     }
 
@@ -67,21 +67,21 @@ class OrderControllerTest {
         List<Book> allBooks = bookRepository.findAll();
         int allBooksSize = allBooks.size();
         List<String> orderedBooks = allBooks.subList(0, allBooksSize / 10).stream().map(Book::getId).toList();
-        OrderDto orderDto = new OrderDto(orderedBooks,"Give this books :D");
+        BookOrderDto bookOrderDto = new BookOrderDto(orderedBooks,"Give this books :D");
 
-        orderRepository.removeOrderByClientEmail(email);
-        String payload = asJsonString(orderDto);
+        bookOrderRepository.removeOrderByClientEmail(email);
+        String payload = asJsonString(bookOrderDto);
         mockMvc.perform(post(url.toURI())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(payload))
                 .andDo(print()).andExpect(status().isCreated());
 
-        Order order = orderRepository.findAllByClientEmail(email).get(0);
-        assert order.getClientEmail().equals(email);
-        assert order.getOrderList().size()==orderedBooks.size();
-        assert order.getOrderStatus().equals(EOrderStatus.CREATED);
-        orderRepository.removeAllByClientEmail(email);
+        BookOrder bookOrder = bookOrderRepository.findAllByClientEmail(email).get(0);
+        assert bookOrder.getClientEmail().equals(email);
+        assert bookOrder.getOrderList().size()==orderedBooks.size();
+        assert bookOrder.getOrderStatus().equals(EBookOrderStatus.CREATED);
+        bookOrderRepository.removeAllByClientEmail(email);
 
     }
 
@@ -90,8 +90,8 @@ class OrderControllerTest {
     void AddOneEmptyOrderBadRequest() throws Exception {
         String email = "user@gmail.com";
         //GIVEN
-        OrderDto orderDto = new OrderDto(new ArrayList<>(),"Give this books :D");
-        String payload = asJsonString(orderDto);
+        BookOrderDto bookOrderDto = new BookOrderDto(new ArrayList<>(),"Give this books :D");
+        String payload = asJsonString(bookOrderDto);
         //WHEN
         mockMvc.perform(post(url.toURI())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -112,10 +112,10 @@ class OrderControllerTest {
         List<Book> allBooks = bookRepository.findAll();
         int allBooksSize = allBooks.size();
         List<String> orderedBooks = allBooks.subList(0, allBooksSize / 10).stream().map(Book::getId).toList();
-        OrderDto orderDto = new OrderDto(orderedBooks,"Give this books :D");
+        BookOrderDto bookOrderDto = new BookOrderDto(orderedBooks,"Give this books :D");
 
-        orderRepository.removeOrderByClientEmail(email);
-        String payload = asJsonString(orderDto);
+        bookOrderRepository.removeOrderByClientEmail(email);
+        String payload = asJsonString(bookOrderDto);
         for (int i = 0; i < 2; i++) {
             mockMvc.perform(post(url.toURI())
                             .contentType(MediaType.APPLICATION_JSON)
@@ -124,11 +124,11 @@ class OrderControllerTest {
                     .andDo(print()).andExpect(status().isCreated());
         }
 
-        Order order = orderRepository.findAllByClientEmail(email).get(0);
-        assert order.getClientEmail().equals(email);
-        assert order.getOrderList().size()==orderedBooks.size();
-        assert order.getOrderStatus().equals(EOrderStatus.CREATED);
-        orderRepository.removeAllByClientEmail(email);
+        BookOrder bookOrder = bookOrderRepository.findAllByClientEmail(email).get(0);
+        assert bookOrder.getClientEmail().equals(email);
+        assert bookOrder.getOrderList().size()==orderedBooks.size();
+        assert bookOrder.getOrderStatus().equals(EBookOrderStatus.CREATED);
+        bookOrderRepository.removeAllByClientEmail(email);
 
     }
 

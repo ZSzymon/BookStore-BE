@@ -1,4 +1,4 @@
-package com.assigment.bookstore.order.models;
+package com.assigment.bookstore.bookOrder.models;
 
 import com.assigment.bookstore.book.Book;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Order {
+public class BookOrder {
 
     @Id
     private String id;
@@ -20,12 +20,12 @@ public class Order {
     private List<Book> orderList;
     private String clientEmail;
     private String description;
-    private EOrderStatus orderStatus;
+    private EBookOrderStatus orderStatus;
 
-    public Order(List<Book> books, String email, String description) {
+    public BookOrder(List<Book> books, String email, String description) {
         this.orderList = books;
         this.clientEmail = email;
         this.description = description;
-        this.orderStatus = EOrderStatus.CREATED;
+        this.orderStatus = EBookOrderStatus.CREATED;
     }
 }

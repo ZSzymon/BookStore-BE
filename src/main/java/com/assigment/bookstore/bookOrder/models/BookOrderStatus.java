@@ -1,4 +1,4 @@
-package com.assigment.bookstore.order.models;
+package com.assigment.bookstore.bookOrder.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +11,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Document
 @NoArgsConstructor
-public class OrderStatus {
+public class BookOrderStatus {
 
     @Id
     private String id;
-    private EOrderStatus orderStatus;
+    private EBookOrderStatus orderStatus;
     private String name;
 
     @PersistenceConstructor
-    public OrderStatus(String id, EOrderStatus orderStatus, String name) {
+    public BookOrderStatus(String id, EBookOrderStatus orderStatus, String name) {
         this.id = id;
         this.orderStatus = orderStatus;
         this.name = name;
