@@ -12,16 +12,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class OrderDto {
-    private List<Book> bookList;
+    private List<String> bookList;
     private String description;
 
     @PersistenceConstructor
-    public OrderDto(List<Book> bookList, String description) {
+    public OrderDto(List<String> bookList, String description) {
         this.bookList = bookList;
         this.description = description;
     }
 
     public OrderDto(Order order) {
-        this.bookList = order.getOrderList();
+        this.bookList = order.getOrderList().stream().map(Book::getId).toList();
     }
 }

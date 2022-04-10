@@ -1,11 +1,12 @@
 package com.assigment.bookstore.order;
 
-import com.assigment.bookstore.IGenericService;
+import com.assigment.bookstore.generics.IGenericService;
 import com.assigment.bookstore.book.Book;
+import com.assigment.bookstore.book.BookRepository;
 import com.assigment.bookstore.exceptions.NotFoundException;
 import com.assigment.bookstore.order.models.Order;
 import com.assigment.bookstore.order.models.OrderDto;
-import jdk.jshell.spi.ExecutionControl;
+import com.assigment.bookstore.securityJwt.authenticationFacade.AuthenticationFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,9 @@ import java.util.List;
 public class OrderService implements IGenericService<Order, OrderDto> {
 
     OrderRepository orderRepository;
+    BookRepository bookRepository;
     OrderAssembler modelAssembler;
+    AuthenticationFacade authenticationFacade;
     @Override
     public CollectionModel<?> all() {
         return modelAssembler.toCollectionModel(orderRepository.findAll());
@@ -27,9 +30,8 @@ public class OrderService implements IGenericService<Order, OrderDto> {
 
     @Override
     public ResponseEntity<?> getBy(String name) {
-        return ResponseEntity.ok(modelAssembler.toModel(orderRepository
-                .findByClientEmail(name)
-                .orElseThrow(()->new NotFoundException("Order", name))));
+        return ResponseEntity.ok(modelAssembler.toCollectionModel(orderRepository
+                .findAllByClientEmail(name)));
     }
 
     @Override
@@ -39,24 +41,22 @@ public class OrderService implements IGenericService<Order, OrderDto> {
     }
 
     @Override
-    @Deprecated
     public ResponseEntity<?> addOne(OrderDto orderDto) {
-        return ResponseEntity.badRequest().build();
+        String email = authenticationFacade.getUserDetailsImpl().getEmail();
+        return addOne(orderDto, email);
     }
 
     public ResponseEntity<?> addOne(OrderDto orderDto, String email) {
-        orderRepository.findByClientEmail(email).ifPresentOrElse(
-                o -> {
-                    if(orderDto.getBookList()==null){return;}
-                    List<Book> oldOrderList = o.getOrderList();
-                    oldOrderList.addAll(orderDto.getBookList());
-                    o.setOrderList(oldOrderList);
-                    orderRepository.save(o);
 
-                }, ()->{
-                    orderRepository.save(new Order(orderDto, email));
-                }
-        );
-        return new ResponseEntity<>("", HttpStatus.CREATED);
+        if (orderDto.getBookList().isEmpty()) {
+            return ResponseEntity.badRequest().body("Empty order.");
+        }
+        List<Book> booksList = orderDto.getBookList().stream()
+                .map(id -> bookRepository.findById(id)
+                        .orElseThrow(()->new NotFoundException("Book", id)))
+                .toList();
+        Order order = orderRepository.insert(new Order(booksList, email, orderDto.getDescription()));
+        return new ResponseEntity<>(modelAssembler.toModel(order), HttpStatus.CREATED);
+
     }
 }

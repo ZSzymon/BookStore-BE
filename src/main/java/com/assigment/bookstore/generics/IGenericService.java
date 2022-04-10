@@ -1,4 +1,4 @@
-package com.assigment.bookstore;
+package com.assigment.bookstore.generics;
 
 import com.assigment.bookstore.order.models.OrderDto;
 import org.springframework.hateoas.CollectionModel;

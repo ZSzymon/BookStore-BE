@@ -3,6 +3,7 @@ package com.assigment.bookstore.dbSeeders;
 import com.assigment.bookstore.book.BookRepository;
 import com.assigment.bookstore.cart.CartController;
 import com.assigment.bookstore.cart.CartRepository;
+import com.assigment.bookstore.order.OrderRepository;
 import com.assigment.bookstore.person.PersonRepository;
 import com.assigment.bookstore.securityJwt.authenticationFacade.AuthenticationFacade;
 import com.assigment.bookstore.securityJwt.controllers.AuthController;
@@ -24,10 +25,12 @@ public class SeederEntryPoint {
     AuthenticationFacade authenticationFacade;
     AuthController authController;
     CartRepository cartRepository;
+    OrderRepository orderRepository;
 
     RoleSeeder roleSeeder;
     UserSeeder userSeeder;
     BookSeeder bookSeeder;
+    OrderSeeder orderSeeder;
 
     @Bean
     CommandLineRunner mainSeeder(){
@@ -42,10 +45,12 @@ public class SeederEntryPoint {
             personRepository.deleteAll();
             bookRepository.deleteAll();
             cartRepository.deleteAll();
+            orderRepository.deleteAll();
 
             roleSeeder.seed();
             userSeeder.seed();
             bookSeeder.seed();
+            orderSeeder.seed();
         };
     }
 }
