@@ -7,7 +7,7 @@ import java.net.URI;
 
 public interface PaymentService {
 
-    CreatedOrder createOrder(Double totalAmount, URI returnUrl);
+    CreatedOrder createOrder(Double totalAmount, URI returnUrl, String bookOrderId);
 
     HttpResponse<Order> captureOrder(String orderId);
 }

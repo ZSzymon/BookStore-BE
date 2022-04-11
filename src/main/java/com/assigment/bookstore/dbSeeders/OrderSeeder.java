@@ -26,9 +26,9 @@ public class OrderSeeder implements ISeeder{
     public void seed() {
         List<Book> books = bookRepository.findAll();
         List<Person> persons = personRepository.findAll();
-        int fakedOrders = 10;
+        int fakedOrders = 1;
         for (int i = 0; i < fakedOrders; i++) {
-            List<Book> booksId = books.subList(books.size()/(i+2), books.size());
+            List<Book> booksId = books.subList(0, 3);
             String randomPersonEmail = persons.get(new Random(i).nextInt(0, persons.size() - 1)).getEmail();
             BookOrder bookOrder = new BookOrder(
                     booksId,

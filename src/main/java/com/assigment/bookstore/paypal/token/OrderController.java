@@ -3,6 +3,7 @@ package com.assigment.bookstore.paypal.token;
 import com.assigment.bookstore.bookOrder.BookOrderRepository;
 import com.assigment.bookstore.bookOrder.models.BookOrder;
 import com.assigment.bookstore.bookOrder.models.EBookOrderStatus;
+import com.assigment.bookstore.exceptions.NotFoundException;
 import com.assigment.bookstore.paypal.CreatedOrder;
 import com.assigment.bookstore.paypal.PaymentService;
 import com.paypal.http.HttpResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/orders")
@@ -41,27 +43,27 @@ public class OrderController {
 
     @GetMapping
     public String orderPage(Model model){
+        //TODO: Nice format order.mustache file.
         model.addAttribute("orderId",orderId);
-        model.addAttribute("bookOrder", bookOrderString);
+        model.addAttribute("bookOrderString", bookOrderString);
         return "order";
     }
 
     @GetMapping("/capture")
     public String captureOrder(@RequestParam String token){
         //FIXME(Never Do this either put it in proper scope or in DB)
-        orderId = token;
-        HttpResponse<Order> orderHttpResponse = paymentService.captureOrder(token);
-        BookOrder bookOrder = bookOrderRepository.findByPayPalOrderId(token).map(_bookOrder -> {
-            _bookOrder.setOrderStatus(EBookOrderStatus.PAYED);
-            return bookOrderRepository.save(_bookOrder);
-        }).get();
+        //TODO Put is to service.
 
+        orderId = token;
+        BookOrder bookOrder = bookOrderRepository.findByPayPalOrderId(token).orElseThrow(
+                () -> new NotFoundException("BookOrder", "PayPalId: " + token)
+        );
+        HttpResponse<Order> orderHttpResponse = paymentService.captureOrder(token);
+
+        bookOrder.setOrderStatus(EBookOrderStatus.PAYED);
+        bookOrderRepository.save(bookOrder);
         bookOrderString = bookOrder.toString();
-        tokenRepository.save(new OrderModel(token,
-                orderHttpResponse.headers(),
-                orderHttpResponse.statusCode(),
-                orderHttpResponse.result(),
-                bookOrder));
+
 
         return "redirect:/orders";
     }
@@ -69,17 +71,7 @@ public class OrderController {
     @PostMapping
     public String placeOrder(@RequestParam Double totalAmount,String bookOrderId, HttpServletRequest request){
         final URI returnUrl = buildReturnUrl(request);
-        if (bookOrderId==null){
-            return "redirect:error";
-        }
-
-        CreatedOrder createdOrder = paymentService.createOrder(totalAmount, returnUrl);
-        bookOrderRepository.findById(bookOrderId).ifPresent(bookOrder -> {
-            bookOrder.setOrderStatus(EBookOrderStatus.INPAYMENT);
-            bookOrder.setPayPalOrderId(createdOrder.getOrderId());
-            bookOrderRepository.save(bookOrder);
-        });
-
+        CreatedOrder createdOrder = paymentService.createOrder(totalAmount, returnUrl, bookOrderId);
         return "redirect:"+createdOrder.getApprovalLink();
     }
 

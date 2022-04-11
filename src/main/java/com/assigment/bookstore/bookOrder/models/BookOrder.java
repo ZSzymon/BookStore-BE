@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,8 +31,29 @@ public class BookOrder {
         this.payPalOrderId = payPalOrderId;
     }
 
+    public boolean isPayedOrCompletedOrShipped(){
+        List<Boolean> conditions = List.of(
+                orderStatus.equals(EBookOrderStatus.PAYED),
+                orderStatus.equals(EBookOrderStatus.COMPLETED),
+                orderStatus.equals(EBookOrderStatus.SHIPPED)
+        );
+        return conditions.contains(true);
+
+    }
     public double getTotalOrderAmount(){
         return orderList.stream().map(Book::getPrice)
                 .reduce(Double.valueOf("0"), Double::sum);
+    }
+
+    @Override
+    public String toString() {
+        return "BookOrder{" +
+                "id='" + id + '\'' +
+                ", orderList=" + orderList +
+                ", clientEmail='" + clientEmail + '\'' +
+                ", description='" + description + '\'' +
+                ", orderStatus=" + orderStatus +
+                ", payPalOrderId='" + payPalOrderId + '\'' +
+                '}';
     }
 }

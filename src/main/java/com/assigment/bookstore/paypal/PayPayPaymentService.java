@@ -1,5 +1,10 @@
 package com.assigment.bookstore.paypal;
 
+import com.assigment.bookstore.bookOrder.BookOrderRepository;
+import com.assigment.bookstore.bookOrder.models.BookOrder;
+import com.assigment.bookstore.bookOrder.models.EBookOrderStatus;
+import com.assigment.bookstore.exceptions.AlreadyPayedException;
+import com.assigment.bookstore.exceptions.NotFoundException;
 import com.paypal.core.PayPalEnvironment;
 import com.paypal.core.PayPalHttpClient;
 import com.paypal.http.HttpResponse;
@@ -7,6 +12,7 @@ import com.paypal.orders.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -21,19 +27,37 @@ public class PayPayPaymentService implements PaymentService{
 
     private final PayPalHttpClient payPalHttpClient;
 
+    private final BookOrderRepository bookOrderRepository;
     public PayPayPaymentService(@Value("${paypal.clientId}") String clientId,
-                                @Value("${paypal.clientSecret}") String clientSecret) {
+                                @Value("${paypal.clientSecret}") String clientSecret,
+                                BookOrderRepository bookOrderRepository) {
+        this.bookOrderRepository = bookOrderRepository;
         payPalHttpClient = new PayPalHttpClient(new PayPalEnvironment.Sandbox(clientId, clientSecret));
     }
-
     @Override
     @SneakyThrows
-    public CreatedOrder createOrder(Double totalAmount, URI returnUrl) {
-        final OrderRequest orderRequest = createOrderRequest(totalAmount, returnUrl);
-        final OrdersCreateRequest ordersCreateRequest = new OrdersCreateRequest().requestBody(orderRequest);
-        final HttpResponse<Order> orderHttpResponse = payPalHttpClient.execute(ordersCreateRequest);
-        final Order order = orderHttpResponse.result();
+    public CreatedOrder createOrder(Double totalAmount, URI returnUrl, String bookOrderId) {
+        BookOrder bookOrder = bookOrderRepository.findById(bookOrderId)
+                .map(bo -> {
+                    if (bo.isPayedOrCompletedOrShipped()) {
+                        throw new AlreadyPayedException(bookOrderId);
+                    }
+                    return bo;
+                })
+                .orElseThrow(()-> new NotFoundException("BookOrder", bookOrderId));
+
+
+        OrderRequest orderRequest = createOrderRequest(totalAmount, returnUrl);
+        OrdersCreateRequest ordersCreateRequest = new OrdersCreateRequest().requestBody(orderRequest);
+        HttpResponse<Order> orderHttpResponse = payPalHttpClient.execute(ordersCreateRequest);
+        Order order = orderHttpResponse.result();
+        log.info("Created order: "+order.id());
         LinkDescription approveUri = extractApprovalLink(order);
+
+        bookOrder.setPayPalOrderId(order.id());
+        bookOrder.setOrderStatus(EBookOrderStatus.INPAYMENT);
+        bookOrderRepository.save(bookOrder);
+
         return new CreatedOrder(order.id(),URI.create(approveUri.href()));
     }
 
@@ -42,6 +66,7 @@ public class PayPayPaymentService implements PaymentService{
     public HttpResponse<Order> captureOrder(String orderId) {
         final OrdersCaptureRequest ordersCaptureRequest = new OrdersCaptureRequest(orderId);
         final HttpResponse<Order> httpResponse = payPalHttpClient.execute(ordersCaptureRequest);
+        log.info("Captured order: "+orderId);
         log.info("Order Capture Status: {}",httpResponse.result().status());
         return httpResponse;
     }
