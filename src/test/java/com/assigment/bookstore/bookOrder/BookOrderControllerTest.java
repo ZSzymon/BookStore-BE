@@ -45,7 +45,7 @@ class BookOrderControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private BookRepository bookRepository;
-    private URL url = new URL("http", "localhost", 8080, "/api/v1/orders/");
+    private URL url = new URL("http", "localhost", 8080, "/api/v1/bookorders/");
 
     BookOrderControllerTest() throws MalformedURLException {
 

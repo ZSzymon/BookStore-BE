@@ -33,8 +33,8 @@ public class OrderSeeder implements ISeeder{
             BookOrder bookOrder = new BookOrder(
                     booksId,
                     randomPersonEmail,
-                    "FakeOrder"
-                    );
+                    "FakeOrder",
+                    "");
             bookOrderRepository.insert(bookOrder);
         }
 

@@ -5,11 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -23,12 +21,13 @@ public class BookOrder {
     private String clientEmail;
     private String description;
     private EBookOrderStatus orderStatus;
-
-    public BookOrder(List<Book> books, String email, String description) {
+    private String payPalOrderId;
+    public BookOrder(List<Book> books, String email, String description, String payPalOrderId) {
         this.orderList = books;
         this.clientEmail = email;
         this.description = description;
         this.orderStatus = EBookOrderStatus.CREATED;
+        this.payPalOrderId = payPalOrderId;
     }
 
     public double getTotalOrderAmount(){

@@ -9,15 +9,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/orders")
+@RequestMapping("api/v1/bookorders")
 public class BookOrderController extends GenericController<BookOrder, BookOrderDto> {
 
 
-    private final OrderService orderService;
+    private final BookOrderService bookOrderService;
 
-    public BookOrderController(OrderService _orderService) {
-        super(_orderService);
-        orderService = _orderService;
+    public BookOrderController(BookOrderService _Book_orderService) {
+        super(_Book_orderService);
+        bookOrderService = _Book_orderService;
     }
 
     @Override

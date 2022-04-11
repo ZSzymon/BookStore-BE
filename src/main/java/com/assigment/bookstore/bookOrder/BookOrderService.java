@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class OrderService implements IGenericService<BookOrder, BookOrderDto> {
+public class BookOrderService implements IGenericService<BookOrder, BookOrderDto> {
 
     BookOrderRepository bookOrderRepository;
     BookRepository bookRepository;
@@ -55,7 +55,7 @@ public class OrderService implements IGenericService<BookOrder, BookOrderDto> {
                 .map(id -> bookRepository.findById(id)
                         .orElseThrow(()->new NotFoundException("Book", id)))
                 .toList();
-        BookOrder bookOrder = bookOrderRepository.insert(new BookOrder(booksList, email, bookOrderDto.getDescription()));
+        BookOrder bookOrder = bookOrderRepository.insert(new BookOrder(booksList, email, bookOrderDto.getDescription(), null));
         return new ResponseEntity<>(modelAssembler.toModel(bookOrder), HttpStatus.CREATED);
 
     }
