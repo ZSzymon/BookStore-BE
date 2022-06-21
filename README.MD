@@ -79,6 +79,7 @@ This app is connected with PayPal demo api. To see example use go to [homepage](
 To get any book order id go to MongoExpress bookOrder document.
 #### Documentation
  * [Swagger apidocs](localhost:8080/v2/api-docs) 
+```localhost:8080/v2/api-docs```
  * [Swagger ui](http://localhost:8080/swagger-ui.html#/)
  
 #### MongoDB
