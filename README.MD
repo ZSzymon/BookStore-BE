@@ -72,7 +72,7 @@ Example uses of each endpoint can be found in test directory
 [Path](src\test\java\com\assigment\bookstore)
 ```src\test\java\com\assigment\bookstore```
 ### Feature List
-67061101556
+
 #### PayPal
 This app is connected with PayPal demo api. To see example use go to [homepage](http://localhost:8080/).
 ![](doc/paypal.png)
