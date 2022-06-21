@@ -19,6 +19,8 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
+import static com.assigment.bookstore.Utils.asJsonString;
+
 @Service
 @Slf4j
 public class PayPayPaymentService implements PaymentService{
@@ -66,8 +68,19 @@ public class PayPayPaymentService implements PaymentService{
     public HttpResponse<Order> captureOrder(String orderId) {
         final OrdersCaptureRequest ordersCaptureRequest = new OrdersCaptureRequest(orderId);
         final HttpResponse<Order> httpResponse = payPalHttpClient.execute(ordersCaptureRequest);
+        String httpResponseAsJson = asJsonString(httpResponse);
+
+        BookOrder bookOrder = bookOrderRepository.findByPayPalOrderId(orderId).orElseThrow(
+                () -> new NotFoundException("BookOrder", "PayPalId: " + orderId)
+        );
+        bookOrder.setOrderStatus(EBookOrderStatus.PAYED);
+        bookOrder.setHttpResponseJson(httpResponseAsJson);
+
+        bookOrderRepository.save(bookOrder);
         log.info("Captured order: "+orderId);
         log.info("Order Capture Status: {}",httpResponse.result().status());
+
+
         return httpResponse;
     }
 

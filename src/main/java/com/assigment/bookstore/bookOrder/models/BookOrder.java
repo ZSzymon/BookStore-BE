@@ -23,12 +23,24 @@ public class BookOrder {
     private String description;
     private EBookOrderStatus orderStatus;
     private String payPalOrderId;
+    private String httpResponseJson;
+
     public BookOrder(List<Book> books, String email, String description, String payPalOrderId) {
         this.orderList = books;
         this.clientEmail = email;
         this.description = description;
         this.orderStatus = EBookOrderStatus.CREATED;
         this.payPalOrderId = payPalOrderId;
+    }
+    public BookOrder(List<Book> books, String email, String description, String payPalOrderId,
+                     String httpResponseJson) {
+        this.orderList = books;
+        this.clientEmail = email;
+        this.description = description;
+        this.orderStatus = EBookOrderStatus.CREATED;
+        this.payPalOrderId = payPalOrderId;
+        this.httpResponseJson = httpResponseJson;
+
     }
 
     public boolean isPayedOrCompletedOrShipped(){

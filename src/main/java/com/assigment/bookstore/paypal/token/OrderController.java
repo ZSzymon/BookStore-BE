@@ -51,20 +51,7 @@ public class OrderController {
 
     @GetMapping("/capture")
     public String captureOrder(@RequestParam String token){
-        //FIXME(Never Do this either put it in proper scope or in DB)
-        //TODO Put is to service.
-
-        orderId = token;
-        BookOrder bookOrder = bookOrderRepository.findByPayPalOrderId(token).orElseThrow(
-                () -> new NotFoundException("BookOrder", "PayPalId: " + token)
-        );
         HttpResponse<Order> orderHttpResponse = paymentService.captureOrder(token);
-
-        bookOrder.setOrderStatus(EBookOrderStatus.PAYED);
-        bookOrderRepository.save(bookOrder);
-        bookOrderString = bookOrder.toString();
-
-
         return "redirect:/orders";
     }
 

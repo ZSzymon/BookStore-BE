@@ -1,30 +1,10 @@
 # SureTime
 
-### Reference Documentation
+#### Developers recommendations
 
-For further reference, please consider the following sections:
-
-* [Spring Boot Tutorial - Build a Rest Api with MongoDB](https://www.youtube.com/watch?v=ssj0CGxv60k&t=457s&ab_channel=Amigoscode)
-* [Project Lombok](https://projectlombok.org/)
-* [Spring Security](https://octoperf.com/blog/2018/03/08/securing-rest-api-spring-security/#user-auth-uuid)
-* [Spring Security - 2](https://www.bezkoder.com/spring-boot-jwt-auth-mongodb/)
-* [Hexagonal Architecture](https://www.baeldung.com/hexagonal-architecture-ddd-spring)
-
-### Guides
-
-The following guides illustrate how to use some features concretely:
-
-* [Accessing Data with MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
-
-### Developers recommendations
-
-Use a [IntelliJ IDEA Ultimate](https://www.jetbrains.com/lp/intellij-frameworks/)
-
-Use a [API-DOCS](http://localhost:8080/swagger-ui/index.html)
-        ```http://localhost:8080/swagger-ui/index.html```
+* Use a [IntelliJ IDEA Ultimate](https://www.jetbrains.com/lp/intellij-frameworks/)
+* Use a [API-DOCS](http://localhost:8080/swagger-ui.html)
+* Use a [Mongo Express](http://localhost:8081)
 #### Requirements
 
 * [ Maven](https://maven.apache.org/)
@@ -43,11 +23,7 @@ Use a [API-DOCS](http://localhost:8080/swagger-ui/index.html)
     ```
     mvn spring-boot:run
     ```
-3. To turn on security in application.properties set this variable to true. 
-    ```
-    suretime.app.isSecureMode = true
-   ```
-4. Register to API:
+3. Register to API:
 
   ```
     curl --location --request POST 'http://localhost:8080/api/auth/signup' \
@@ -58,7 +34,7 @@ Use a [API-DOCS](http://localhost:8080/swagger-ui/index.html)
     "password": "password"
 }'
   ```
-5. Login to API:
+4. Login to API:
   ```
     curl --location --request POST 'http://localhost:8080/api/auth/signin' \
     --header 'Content-Type: application/json' \
@@ -67,25 +43,91 @@ Use a [API-DOCS](http://localhost:8080/swagger-ui/index.html)
     "password":"password"
     }'
   ```
-6. If authorization is turn on you can make GET request. If you want to make any other request you have to provide authorization token in request header.
+5. If authorization is turn on you can make GET request. If you want to make any other request you have to provide authorization token in request header.
   ```
     curl --location --request GET 'http://localhost:8080/api/test/admin' \
     --header 'Authorization: Bearer token'
   ```
-### Project requirements
 
-3. CRUD + Spring Security z podziałem na role : admin -dodaje i usuwa  ksiazki z ksiegarni, user możne przeglądać.
+#### Default users
+Credentials for default users
+ ##### Admin
+    login: admin  
+    email: admin@gmail.com  
+    password: password  
+    role: admin  
+##### User
+    login: user  
+    email: user@gmail.com  
+    password: password  
+    role: user
+##### Moderator
+    login: mod  
+    email: mod@gmail.com  
+    password: password  
+    role: mod
 
-3.5  CRUD + koszyk - dodawanie usuwanie książek przez Usera.
+### Example uses
+Example uses of each endpoint can be found in test directory  
+[Path](src\test\java\com\assigment\bookstore)
+```src\test\java\com\assigment\bookstore```
+### Feature List
+67061101556
+#### PayPal
+This app is connected with PayPal demo api. To see example use go to [homepage](http://localhost:8080/).
+![](doc/paypal.png)
+To get any book order id go to MongoExpress bookOrder document.
+#### Documentation
+ * [Swagger apidocs](localhost:8080/v2/api-docs) 
+ * [Swagger ui](http://localhost:8080/swagger-ui.html#/)
+ 
+#### MongoDB
+This project uses non sql database MongoDB
 
-4. Zamówienia -  Dodanie funkcji które może wykonywać User - składanie zamówień na książki, zmiana statusu zamówienia przez admina.
+#### MongoExpress
+This project uses mongoExpress as UI for db.  
+[Mongo Express](http://localhost:8081)
 
-4.5 Wygląd aplikacji Można użyć boostrapa / Własny bardziej rozbudowany projekt lub bardziej rozszerzony projekt z przykładu
 
-5 Płatności - np. wysyłanie szczczegółów zamówienia na maila z danymi do przelewu lub podpięcie np. PayU
+#### Authorization. 
+* User can register itself. 
+* User can login
+* Used JWT Token for maintaining sessions.
 
-+ 0.5  za zadania - jeżeli  zostanie zrealizowany inny projekt na zaliczenie.
+#### Book endpoint
+Endpoint for books in shop.
+This endpoint allows user to perform:
+* get all books in shop
+* get one book in shop
+* add book to shop (Admin)
+* remove book from shop (Admin)
 
-Projekt proszę wysłać jako link do githuba.
+#### Book order controller
+Endpoint for managing orders in shop.
+It allows to:
+* show all carts
+* add cart to given person
+* show person's cart
+* clear person's cart
 
-Projekt powinien zawierać opis funkcjonalności, skrypt do zbudowania bazy danych, oraz inne opisy sposobu uruchomienia jeżeli potrzeba.
+#### Person endpoint
+Endpoint for managing persons account in app.
+It allows to:
+* get all accounts
+* get one account
+* remove one account
+* create/update one account
+* get current logged account
+
+
+#### Project requirements
+
+[x] 3. CRUD + Spring Security z podziałem na role : admin -dodaje i usuwa  ksiazki z ksiegarni, user możne przeglądać.
+
+[x] 3.5  CRUD + koszyk - dodawanie usuwanie książek przez Usera.
+
+[x] 4. Zamówienia -  Dodanie funkcji które może wykonywać User - składanie zamówień na książki, zmiana statusu zamówienia przez admina.
+
+[ ] 4.5 Wygląd aplikacji Można użyć boostrapa / Własny bardziej rozbudowany projekt lub bardziej rozszerzony projekt z przykładu
+
+[x] 5 Płatności - np. wysyłanie szczczegółów zamówienia na maila z danymi do przelewu lub podpięcie np. PayU
