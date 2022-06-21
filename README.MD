@@ -96,22 +96,37 @@ This project uses mongoExpress as UI for db.
 
 #### Book endpoint
 Endpoint for books in shop.
+![](doc/book_controller.png)
 This endpoint allows user to perform:
 * get all books in shop
 * get one book in shop
 * add book to shop (Admin)
 * remove book from shop (Admin)
 
+#### Cart 
+![img.png](img.png)
+
 #### Book order controller
 Endpoint for managing orders in shop.
+![](doc/book_order_controller.png)
 It allows to:
-* show all carts
-* add cart to given person
+* show all book orders
+* add one book order
 * show person's cart
 * clear person's cart
 
+#### Cart 
+Endpoint for managing persons cart.
+![](doc/cart.png)
+It allows to:
+* Show all cart (Admin)
+* Get one cart 
+* Create / update one cart
+* Remove one cart (Admin)
+
 #### Person endpoint
 Endpoint for managing persons account in app.
+![](doc/person_controler.png)
 It allows to:
 * get all accounts
 * get one account
