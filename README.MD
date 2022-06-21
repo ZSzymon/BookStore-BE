@@ -1,5 +1,5 @@
-# SureTime
-
+# SKE Project
+##[GitHub Link](https://github.com/ZSzymon/BookStore-BE) 
 #### Developers recommendations
 
 * Use a [IntelliJ IDEA Ultimate](https://www.jetbrains.com/lp/intellij-frameworks/)
