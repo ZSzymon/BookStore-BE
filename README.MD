@@ -36,6 +36,7 @@
 
   ```
 4. Login to API:
+5. 
   ```
     curl --location --request POST 'http://localhost:8080/api/auth/signin' \
     --header 'Content-Type: application/json' \
