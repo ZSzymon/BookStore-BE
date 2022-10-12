@@ -12,6 +12,7 @@ public class util {
             return jsonContent;
         } catch (Exception e) {
             throw new RuntimeException(e);
+
         }
     }
 }
