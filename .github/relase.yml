@@ -2,6 +2,7 @@ changelog:
   exclude:
     labels:
       - ignore-for-release
+      - ignore-for-release2
     authors:
       - octocat
   categories:
