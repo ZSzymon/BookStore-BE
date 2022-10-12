@@ -13,6 +13,7 @@ FE - Frontend
 - [ ] Create Database diagram.
 - [x] Spring Security.
 - [ ] Create FE project
+- 
 - [ ] Create gateway service
 - [x] JWT Authentication
 - [ ] Create data mock to database
