@@ -33,6 +33,7 @@
     "email": "user@gmail.com",
     "password": "password"
 }'
+
   ```
 4. Login to API:
   ```
