@@ -24,7 +24,6 @@
     mvn spring-boot:run
     ```
 3. Register to API:
-
   ```
     curl --location --request POST 'http://localhost:8080/api/auth/signup' \
 --header 'Content-Type: application/json' \
@@ -36,7 +35,6 @@
 
   ```
 4. Login to API:
-5. 
   ```
     curl --location --request POST 'http://localhost:8080/api/auth/signin' \
     --header 'Content-Type: application/json' \
